@@ -77,6 +77,7 @@ const Dashboard = () => {
                     className="w-full"
                     variant="destructive"
                     onClick={() => deleteFile({ id: file.id })}
+                    disabled={currentlyDeletingFile === file.id}
                   >
                     {currentlyDeletingFile === file.id ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
