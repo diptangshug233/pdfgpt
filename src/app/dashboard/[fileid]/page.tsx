@@ -10,6 +10,30 @@ interface PageProps {
   };
 }
 
+if (typeof Promise.withResolvers === "undefined") {
+  if (typeof window !== "undefined") {
+    // @ts-expect-error This does not exist outside of polyfill which this is doing
+    window.Promise.withResolvers = function () {
+      let resolve, reject;
+      const promise = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
+      });
+      return { promise, resolve, reject };
+    };
+  } else {
+    // @ts-expect-error This does not exist outside of polyfill which this is doing
+    global.Promise.withResolvers = function () {
+      let resolve, reject;
+      const promise = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
+      });
+      return { promise, resolve, reject };
+    };
+  }
+}
+
 const Page = async ({ params }: PageProps) => {
   const { fileid } = params;
 
@@ -32,7 +56,7 @@ const Page = async ({ params }: PageProps) => {
       <div className="mx-auto w-full max-w-8xl grow lg:flex xl:px-2">
         <div className="flex-1 xl:flex">
           <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-            <PdfRenderer />
+            <PdfRenderer url={file.url} />
           </div>
         </div>
 

@@ -38,7 +38,7 @@ const UploadDropzone = () => {
           return prevProgress + 5;
         }
       });
-    }, 300);
+    }, 500);
 
     return interval;
   };
