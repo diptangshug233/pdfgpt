@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^0.0.46",
     "@google/generative-ai": "^0.17.1",
     "@hookform/resolvers": "^3.9.0",
     "@kinde-oss/kinde-auth-nextjs": "^2.3.6",
@@ -29,6 +30,7 @@
     "@trpc/react-query": "^10.38.4",
     "@trpc/server": "^10.38.4",
     "@uploadthing/react": "^6.7.2",
+    "ai": "^3.3.26",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
