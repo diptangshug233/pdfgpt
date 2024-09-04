@@ -107,7 +107,7 @@ export const POST = async (req: NextRequest) => {
     topP: 0.9,
   };
   const response = await genai
-    .getGenerativeModel({ model: "gemini-1.5-pro-latest", generationConfig })
+    .getGenerativeModel({ model: "gemini-1.5-flash", generationConfig })
     .generateContentStream(prompt);
 
   const stream = GoogleGenerativeAIStream(response, {
