@@ -2,14 +2,11 @@ import { db } from "@/db";
 import { pinecone } from "@/lib/pinecone";
 import { SendMessageValidator } from "@/lib/validators/SendMessageValidator";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import {
-  ChatGoogleGenerativeAI,
-  GoogleGenerativeAIEmbeddings,
-} from "@langchain/google-genai";
-import { PineconeStore } from "@langchain/pinecone";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAIStream, StreamingTextResponse } from "ai";
 import { NextRequest } from "next/server";
-import { streamText } from "ai";
-import { google } from "@ai-sdk/google";
+import { getEmbeddings } from "@/lib/embeddings";
+import { convertToAscii } from "@/lib/utils";
 
 export const POST = async (req: NextRequest) => {
   const body = await req.json();
@@ -47,19 +44,26 @@ export const POST = async (req: NextRequest) => {
     },
   });
 
-  const embeddings = new GoogleGenerativeAIEmbeddings({
-    apiKey: process.env.GOOGLE_API_KEY,
-    model: "models/embedding-001",
-  });
+  const queryEmbeddings = await getEmbeddings(message);
 
   const pineconeIndex = pinecone.index("pdfgpt");
 
-  const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
-    pineconeIndex,
-    namespace: file.id,
+  const namespace = pineconeIndex.namespace(convertToAscii(file.id));
+  const results = await namespace.query({
+    vector: queryEmbeddings,
+    topK: 4,
+    includeMetadata: true,
   });
 
-  const results = await vectorStore.similaritySearch(message, 4);
+  const formattedResults = results.matches.map((match) => {
+    return {
+      pageContent: match.metadata?.text ?? "",
+      metadata: {
+        pageNumber: match.metadata?.pageNumber ?? 0,
+      },
+      id: match.id,
+    };
+  });
 
   const prevMessages = await db.message.findMany({
     where: {
@@ -76,16 +80,6 @@ export const POST = async (req: NextRequest) => {
     content: msg.text,
   }));
 
-  const model = new ChatGoogleGenerativeAI({
-    apiKey: process.env.GOOGLE_API_KEY,
-    model: "gemini-pro",
-    temperature: 1.0, // Control the randomness of the output
-    streaming: true, // Enable streaming mode
-    topK: 40, // Maintain a high value for diversity
-    topP: 0.9, // Set a moderate value for probability concentration
-  });
-
-  // Convert the prompt template into a single string
   const prompt = `
   System message:
   Use the following pieces of context (or previous conversaton if needed) to answer the users question in markdown format. \nIf you don't know the answer, just say that you don't know, don't try to make up an answer.
@@ -101,17 +95,33 @@ export const POST = async (req: NextRequest) => {
   \n----------------\n
   
   CONTEXT:
-  ${results.map((r) => r.pageContent).join("\n\n")}
+  ${formattedResults.map((r) => r.pageContent).join("\n\n")}
   
   USER INPUT: ${message}`;
 
-  const modelT = google("models/gemini-1.5-pro-latest");
+  const genai = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
 
-  const result = await streamText({
-    model: modelT,
-    prompt,
+  const generationConfig = {
+    temperature: 1.0,
+    topK: 40,
+    topP: 0.9,
+  };
+  const response = await genai
+    .getGenerativeModel({ model: "gemini-1.5-pro-latest", generationConfig })
+    .generateContentStream(prompt);
+
+  const stream = GoogleGenerativeAIStream(response, {
+    async onCompletion(completion) {
+      await db.message.create({
+        data: {
+          text: completion,
+          isUserMessage: false,
+          fileId,
+          userId,
+        },
+      });
+    },
   });
 
-  // Respond with a streaming response
-  return result.toAIStreamResponse();
+  return new StreamingTextResponse(stream);
 };
