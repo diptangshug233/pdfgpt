@@ -9,6 +9,7 @@
     "lint": "next lint",
     "postinstall": "prisma generate"
   },
+  "type": "module",
   "dependencies": {
     "@ai-sdk/google": "^0.0.46",
     "@google/generative-ai": "^0.17.1",
