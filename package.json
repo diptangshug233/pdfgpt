@@ -9,7 +9,6 @@
     "lint": "next lint",
     "postinstall": "prisma generate"
   },
-  "type": "module",
   "dependencies": {
     "@ai-sdk/google": "^0.0.46",
     "@google/generative-ai": "^0.17.1",
@@ -50,7 +49,7 @@
     "react-hook-form": "^7.52.2",
     "react-loading-skeleton": "^3.4.0",
     "react-markdown": "^9.0.1",
-    "react-pdf": "^9.1.0",
+    "react-pdf": "^7.3.3",
     "react-resize-detector": "^11.0.1",
     "react-textarea-autosize": "^8.5.3",
     "simplebar-react": "^3.2.6",
