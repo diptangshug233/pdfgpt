@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# [PDF-GPT](https://pdfgpt-ai.vercel.app/)
 
-## Getting Started
+[PDF-GPT](https://pdfgpt-ai.vercel.app/) is a web application that allows users to upload PDF documents and extract information from them using natural language processing (NLP). The application is built using a modern tech stack and provides a seamless user experience for managing and querying PDF files.
 
-First, run the development server:
+## Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Frontend
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Next.js** : A React framework for building server-rendered, statically generated, and performance-optimized web applications.
+- **Tailwind CSS** : A utility-first CSS framework for styling components with a highly customizable and responsive design.
+- **Shadcn/UI** : A modern, accessible and highly customizable UI component library built with React and Tailwind CSS.
+- **TypeScript** : A superset of JavaScript that adds optional static typing and other features to improve code quality and maintainability.
+- **React** : A JavaScript library for building user interfaces.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Backend
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Next.js** : A React framework for building server-rendered, statically generated, and performance-optimized web applications.
+- **Prisma** : A modern ORM (Object-Relational Mapping) library that provides a simple and powerful way to interact with databases.
+- **TRPC** : A TypeScript library for building APIs with a simple and intuitive API.
+- **Zod** : A TypeScript library for building type-safe, runtime-validated data models.
 
-## Learn More
+### Database
 
-To learn more about Next.js, take a look at the following resources:
+- **Neon** : A serverless, open-source, and PostgreSQL-compatible database that provides a scalable and secure way to store data.
+- **Pinecone** : A vector database that provides a simple and efficient way to store and query dense vectors.
+- **Prisma** : A modern ORM (Object-Relational Mapping) library that provides a simple and powerful way to interact with databases.
+- **UploadThing** : A serverless file upload service that provides a simple and efficient way to store and serve files.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Authentication and Payments
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- **Stripe** : A popular payment gateway for handling subscriptions, payments, and billing management.
+- **Kinde** : A simple and secure authentication platform for adding authentication and authorization services to web applications.
 
-## Deploy on Vercel
+### Deployment and Hosting
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Vercel** : A cloud platform for deploying and hosting serverless functions, static websites, and web applications.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Natural Language Processing (NLP)
+
+- **Vercel AI** : A serverless AI platform that provides a simple and efficient way to use AI models in web applications.
+- **Google Gemini** : A state-of-the-art language model for natural language processing tasks, such as text generation, summarization, and question answering.
+- **Langchain** : A library for building AI-powered applications with a simple and intuitive API.
+
+## Workflow
+
+The workflow for using [PDF-GPT](https://pdfgpt-ai.vercel.app/) is as follows:
+
+1.  **User Authentication** : Users can sign up or log in to the application using their email and password or through a third-party authentication provider like Google or GitHub.
+2.  **PDF Upload** : Authenticated users can upload PDF files to the application.
+3.  **PDF Processing** : After a PDF file is uploaded, the application uses OpenAI GPT-3 to extract relevant information and create a searchable index.
+4.  **Question and Answer** : Users can ask questions about the content of their uploaded PDF files, and the application will generate a response based on the information extracted from the PDF using the GPT-3 model.
+5.  **File Management** : Users can view and manage their uploaded PDF files, including searching for specific text within the files and previewing the content.
+6.  **Subscription Management** : Users can manage their subscription plan and billing information through the integrated Stripe payment gateway.
+
+## Features
+
+### User Authentication
+
+- Sign up and log in with email and password
+- Sign in with third-party authentication providers (e.g., Google, GitHub)
+- Password reset functionality
+
+### PDF Management
+
+- Upload PDF files to the application
+- View and manage uploaded PDF files
+- Search for specific text within uploaded PDF files
+- Preview the content of uploaded PDF files
+
+### Natural Language Processing
+
+- Ask questions about the content of uploaded PDF files
+- Receive responses generated by the GPT-3 model based on the information extracted from the PDF
+- Contextual and relevant answers to user queries
+
+### Subscription and Billing
+
+- Subscribe to different pricing plans
+- Manage subscription and billing information
+- Secure payment processing with Stripe integration
+
+### User Interface
+
+- Responsive and modern user interface built with Tailwind CSS
+- Intuitive navigation and user experience
+- Dark mode support
+
+## Contributing
+
+Contributions to [PDF-GPT](https://pdfgpt-ai.vercel.app/) are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request on the project's GitHub repository.
