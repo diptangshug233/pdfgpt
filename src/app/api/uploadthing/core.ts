@@ -23,6 +23,12 @@ type PDFPage = {
 
 const f = createUploadthing();
 
+/**
+ * Gets the user's ID and subscription plan.
+ *
+ * @returns {Promise<{userId: string, subscriptionPlan: import("@/config/stripe").Plan}>}
+ * @throws {Error} If the user is not logged in.
+ */
 const middleware = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
@@ -33,6 +39,23 @@ const middleware = async () => {
   return { userId: user.id, subscriptionPlan };
 };
 
+/**
+ * Called after a file has been uploaded to the server. This function
+ * checks if a file with the same key already exists in the database.
+ * If it does, it exits early. If it doesn't, it creates a new file document
+ * with an upload status of "PROCESSING". It then attempts to load the
+ * PDF file and extract its pages. If the file is too large for the user's
+ * plan, it updates the upload status to "FAILED". Otherwise, it extracts
+ * the pages, embeds them, and indexes them in Pinecone. Finally, it updates
+ * the upload status to "SUCCESS".
+ *
+ * @param {Object} opts
+ * @prop {Object} metadata - The user's ID and subscription plan
+ * @prop {Object} file - The uploaded file
+ * @prop {string} file.key - The file's key
+ * @prop {string} file.name - The file's name
+ * @prop {string} file.url - The file's URL
+ */
 const onUploadComplete = async ({
   metadata,
   file,
@@ -120,6 +143,12 @@ export const ourFileRouter = {
 
 export type OurFileRouter = typeof ourFileRouter;
 
+/**
+ * Takes a PDFPage and returns an array of Documents after splitting its pageContent into chunks of 5000 bytes or less.
+ * The Documents' metadata includes the original page number and a truncated version of the page text (up to 3600 bytes).
+ * @param {PDFPage} page The PDFPage to process
+ * @returns {Promise<Document[]>} A promise that resolves to an array of Documents
+ */
 async function prepareDocument(page: PDFPage) {
   let { pageContent, metadata } = page;
   pageContent = pageContent.replace(/\n/g, "");
@@ -138,6 +167,13 @@ async function prepareDocument(page: PDFPage) {
   return docs;
 }
 
+/**
+ * Takes a Document and embeds its pageContent using the Gemini text-embedding-004 model.
+ * Returns a PineconeRecord with the id set to the md5 of the pageContent, values set to the Gemini embeddings,
+ * and metadata set to the text and pageNumber of the original Document.
+ * @param {Document} doc The Document to process
+ * @returns {Promise<PineconeRecord>} A promise that resolves to a PineconeRecord
+ */
 async function embedDocument(doc: Document) {
   try {
     const embeddings = await getEmbeddings(doc.pageContent);
@@ -155,6 +191,16 @@ async function embedDocument(doc: Document) {
   }
 }
 
+/**
+ * Truncates a string to fit within the given number of bytes. Works by encoding
+ * the string to a Uint8Array and then slicing off the bytes that are over the
+ * limit. Be aware that this can result in a string that is not a valid UTF-8
+ * sequence, depending on the input.
+ *
+ * @param {string} str The string to truncate
+ * @param {number} bytes The maximum number of bytes that the string should take
+ * @returns {string} The truncated string
+ */
 export const truncateStringByBytes = (str: string, bytes: number) => {
   const enc = new TextEncoder();
   return new TextDecoder("utf-8").decode(enc.encode(str).slice(0, bytes));

@@ -10,6 +10,20 @@ import { ArrowRight } from "lucide-react";
 import UserAccountNav from "./UserAccountNav";
 import MobileNav from "./MobileNav";
 
+/**
+ * A sticky navbar that displays the PDF-GPT logo, a mobile menu
+ * containing links to sign in and get started, and a desktop menu
+ * containing links to the dashboard, pricing, and user account.
+ *
+ * If the user is not signed in, the mobile menu contains links to
+ * sign in and get started. If the user is signed in, the mobile menu
+ * contains a link to the dashboard and the user's account information.
+ *
+ * The desktop menu always contains links to the dashboard, pricing, and
+ * user account.
+ *
+ * @returns {JSX.Element} The navbar component.
+ */
 const Navbar = async () => {
   const { getUser } = getKindeServerSession();
 

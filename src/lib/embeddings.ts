@@ -2,6 +2,12 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
 
+/**
+ * Embeds the given text into a numerical vector using the Gemini text-embedding-004 model.
+ * @param {string} text The text to embed
+ * @returns {Promise<number[]>} A promise that resolves to the embedded vector
+ */
+
 export async function getEmbeddings(text: string) {
   try {
     const embeddingModel = genAI.getGenerativeModel({

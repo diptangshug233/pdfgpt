@@ -51,7 +51,6 @@ export function constructMetadata({
     },
     icons,
     metadataBase: new URL("https://pdfgpt-ai.vercel.app"),
-    themeColor: "#FFF",
     ...(noIndex && {
       robots: {
         index: false,

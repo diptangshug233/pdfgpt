@@ -12,6 +12,20 @@ interface ChatWrapperProps {
   fileId: string;
 }
 
+/**
+ * A component that renders a chat interface for a given file.
+ *
+ * Fetches the status of the file upload using trpc and displays a loading message
+ * if the status is "PENDING". If the status is "PROCESSING", displays a processing
+ * message. If the status is "FAILED", displays an error message with a link to
+ * the dashboard.
+ *
+ * If the status is "SUCCESS", renders a ChatContextProvider with the fileId and
+ * a Messages component inside.
+ *
+ * @param {{ fileId: string }} props
+ * @returns {JSX.Element}
+ */
 const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
   const { data, isLoading } = trpc.getFileUploadStatus.useQuery(
     { fileId: fileId },

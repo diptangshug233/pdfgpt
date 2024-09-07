@@ -20,6 +20,13 @@ interface UserAccountNavProps {
   name: string;
 }
 
+/**
+ * Renders a dropdown menu with the user's name, email, and links to
+ * their dashboard and billing page.
+ *
+ * @param {{ email: string | undefined, imageUrl: string, name: string }}
+ * @returns {JSX.Element}
+ */
 const UserAccountNav = async ({
   email,
   imageUrl,

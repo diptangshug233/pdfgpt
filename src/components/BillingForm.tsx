@@ -18,11 +18,33 @@ interface BillingFormProps {
   subscriptionPlan: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
 }
 
+/**
+ * Renders a form that allows users to manage their subscription plan.
+ *
+ * @param {BillingFormProps} props The component props.
+ * @param {Awaited<ReturnType<typeof getUserSubscriptionPlan>>} props.subscriptionPlan
+ *   The user's subscription plan. This is passed as a prop from the parent component.
+ *
+ * @returns A JSX element that renders a form with a card containing a title, description,
+ *   and a button that triggers the trpc.createStripeSession mutation when clicked.
+ *   The button's text will be "Manage Subscription" if the user is subscribed, or
+ *   "Upgrade to PRO" if the user is not subscribed.
+ *   If the user is subscribed, the card will also contain a small text that displays
+ *   when the plan will be cancelled or renewed.
+ */
 const BillingForm = ({ subscriptionPlan }: BillingFormProps) => {
   const { toast } = useToast();
 
   const { mutate: createStripeSession, isLoading } =
     trpc.createStripeSession.useMutation({
+      /**
+       * Redirects user to the billing page if the mutation is successful.
+       * The billing page is located at either the provided `url` or
+       * `/dashboard/billing` if no `url` is provided.
+       *
+       * If the mutation is not successful, it will display a toast with a
+       * "destructive" variant and a description saying "Please try again in a moment".
+       */
       onSuccess: ({ url }) => {
         if (url) window.location.href = url;
         if (!url) {

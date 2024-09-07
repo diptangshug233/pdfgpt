@@ -11,6 +11,13 @@ interface MessagesProps {
   fileId: string;
 }
 
+/**
+ * A component that displays a list of messages and loads more as the user scrolls.
+ * When the user is typing, a loading message is displayed at the end of the list.
+ *
+ * @param {{ fileId: string }} props
+ * @returns {JSX.Element}
+ */
 const Messages = ({ fileId }: MessagesProps) => {
   const { isLoading: isAiThinking } = useContext(ChatContext);
 

@@ -11,6 +11,17 @@ import { useToast } from "./ui/use-toast";
 import { trpc } from "@/app/_trpc/client";
 import { useRouter } from "next/navigation";
 
+/**
+ * Component that renders a drag-and-drop zone that allows users to upload PDFs.
+ * The component will automatically upload the file and redirect the user to the
+ * dashboard page when the upload is complete.
+ *
+ * @param {boolean} isSubscribed Whether the user is subscribed or not.
+ * If the user is subscribed, the component will use the proPlanUploader.
+ * If the user is not subscribed, the component will use the freePlanUploader.
+ *
+ * @returns A JSX element that renders the drag-and-drop zone.
+ */
 const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
@@ -21,6 +32,12 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
     isSubscribed ? "proPlanUploader" : "freePlanUploader"
   );
   const { mutate: startPolling } = trpc.getFile.useMutation({
+    /**
+     * Called when the file has been uploaded and indexed successfully.
+     * Redirects the user to the dashboard page for the newly uploaded file.
+     *
+     * @param {PineconeRecord} file The newly uploaded file.
+     */
     onSuccess: (file) => {
       router.push(`/dashboard/${file.id}`);
     },
@@ -28,6 +45,12 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
     retryDelay: 500,
   });
 
+  /**
+   * Starts a simulated progress bar that increments every 800ms.
+   * The progress bar will automatically stop when it reaches 95%.
+   * Returns the interval ID of the timer, which can be used to cancel the progress bar.
+   * @returns {number} The interval ID of the timer.
+   */
   const startSimulatedProgress = () => {
     setUploadProgress(0);
 
@@ -143,6 +166,17 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
     </Dropzone>
   );
 };
+/**
+ * @description
+ * UploadButton is a component that shows a button that says "Upload PDF". When
+ * the button is clicked, it opens a dialog that contains a dropzone that allows
+ * the user to upload a PDF file. The component also takes a boolean prop
+ * `isSubscribed` which determines the text of the header of the dialog. The
+ * component is a client component, meaning that it will not be rendered on the
+ * server.
+ * @param isSubscribed {boolean} Whether the user is subscribed or not.
+ * @returns {JSX.Element} The component.
+ */
 const UploadButton = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 

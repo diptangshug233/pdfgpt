@@ -4,6 +4,34 @@ import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import Image from "next/image";
 
+/**
+ * The home page of the PDF-GPT app.
+ *
+ * This page is the main entry point for users who want to start using PDF-GPT.
+ * It renders a simple hero section with a call-to-action to sign up, and a
+ * brief overview of how to get started.
+ *
+ * The hero section includes a gradient background that is a combination of two
+ * colors: #ff80b5 and #9089fc. The text is white and centered, and includes a
+ * heading element with the text "Chat with your documents in seconds." and a
+ * paragraph element with the text "PDF-GPT allows you to have converstions with
+ * any PDF document. Simply upload your file and start asking questions right
+ * away."
+ *
+ * The call-to-action is a button element with the text "Get started" and a link
+ * to the sign up page.
+ *
+ * The page also includes a section with a heading element that says "Start
+ * chatting in minutes" and a paragraph element with the text "Chatting to your
+ * PDF files has never been easier than with PDF-GPT." This section is followed
+ * by an ordered list with three items, each with a heading element and a
+ * paragraph element. The first item is about signing up, the second item is
+ * about uploading a PDF file, and the third item is about starting a
+ * conversation.
+ *
+ * The page also includes a section with a heading element that says "File upload
+ * preview" and an image element with a preview of the file upload page.
+ */
 export default function Home() {
   return (
     <>

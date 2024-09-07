@@ -13,6 +13,11 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { ArrowRight, Check, HelpCircle, Minus } from "lucide-react";
 import Link from "next/link";
 
+/**
+ * Page that displays the pricing of our service.
+ *
+ * @returns A JSX element representing the pricing page.
+ */
 const Page = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();

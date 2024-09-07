@@ -14,6 +14,12 @@ interface DashboardProps {
   subscriptionPlan: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
 }
 
+/**
+ * A page that displays all the user's uploaded files.
+ *
+ * @param {{ subscriptionPlan: import("@/config/stripe").Plan }} props
+ * @returns {JSX.Element}
+ */
 const Dashboard = ({ subscriptionPlan }: DashboardProps) => {
   const [currentlyDeletingFile, setCurrentlyDeletingFile] = useState<
     string | null
@@ -22,12 +28,28 @@ const Dashboard = ({ subscriptionPlan }: DashboardProps) => {
   const utils = trpc.useContext();
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
   const { mutate: deleteFile } = trpc.deleteFile.useMutation({
+    /**
+     * Invalidate the getUserFiles query when a file is successfully deleted,
+     * so that the list of files is updated on the client.
+     */
     onSuccess: () => {
       utils.getUserFiles.invalidate();
     },
+    /**
+     * Called when the mutation is initiated. Sets the currently deleting file id
+     * to the id of the file being deleted, so that the UI can be updated to
+     * reflect the file being deleted.
+     *
+     * @param {{ id: string }} opts - The id of the file being deleted
+     */
     onMutate: ({ id }) => {
       setCurrentlyDeletingFile(id);
     },
+    /**
+     * Called when the deleteFile mutation has either completed successfully or
+     * errored. Resets the currentlyDeletingFile state to null, so that the UI
+     * no longer indicates that a file is being deleted.
+     */
     onSettled: () => {
       setCurrentlyDeletingFile(null);
     },

@@ -34,6 +34,17 @@ if (typeof Promise.withResolvers === "undefined") {
   }
 }
 
+/**
+ * Page component for dashboard/[fileid]
+ *
+ * Redirects to /auth-callback?origin=dashboard/[fileid] if user is not logged in.
+ *
+ * Fetches file from db and redirects to 404 if file does not exist.
+ *
+ * Renders a PdfRenderer and a ChatWrapper component.
+ * PdfRenderer renders the pdf file from the url.
+ * ChatWrapper renders the chat component for the file.
+ */
 const Page = async ({ params }: PageProps) => {
   const { fileid } = params;
 

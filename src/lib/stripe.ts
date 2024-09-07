@@ -8,6 +8,18 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
   typescript: true,
 });
 
+/**
+ * Retrieves the user's current subscription plan.
+ *
+ * @returns The user's subscription plan, or the free plan if the user is not
+ *   subscribed. The returned object also contains the following boolean
+ *   properties:
+ *   - `isSubscribed`: whether the user is subscribed to the plan
+ *   - `isCanceled`: whether the user has canceled the subscription
+ *   The returned object also contains the user's Stripe customer ID and the
+ *   Stripe subscription ID, as well as the timestamp for when the current
+ *   billing period will end.
+ */
 export async function getUserSubscriptionPlan() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();

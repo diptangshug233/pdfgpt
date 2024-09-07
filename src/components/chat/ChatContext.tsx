@@ -23,6 +23,24 @@ export const ChatContext = createContext<StreamResponse>({
   isLoading: false,
 });
 
+/**
+ * A provider for the chat context, which is used to manage the state of
+ * the chat input and messages.
+ *
+ * The provider uses the `useMutation` hook to create a mutation function
+ * that sends a message to the server and updates the chat state based on the
+ * response.
+ *
+ * The provider also exposes a `handleInputChange` function that is used
+ * to update the chat input message state when the user types something.
+ *
+ * The provider also exposes an `addMessage` function that is used to
+ * send a message to the server and update the chat state based on the
+ * response.
+ *
+ * The provider also exposes an `isLoading` value that is used to
+ * indicate whether a message is being sent or not.
+ */
 export const ChatContextProvider = ({ fileId, children }: Props) => {
   const [message, setMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -34,6 +52,12 @@ export const ChatContextProvider = ({ fileId, children }: Props) => {
   const backupMessage = useRef("");
 
   const { mutate: sendMessage } = useMutation({
+    /**
+     * Mutation function to add a new message to the chat.
+     * @param {{ message: string }} opts - The message to be added.
+     * @returns {Promise<Response>} - The response from the server.
+     * @throws {Error} - If the server returns an error.
+     */
     mutationFn: async ({ message }: { message: string }) => {
       const response = await fetch("/api/message", {
         method: "POST",
@@ -49,6 +73,18 @@ export const ChatContextProvider = ({ fileId, children }: Props) => {
 
       return response.body;
     },
+    /**
+     * Called when the mutation is initiated. Sets the chat input message to an
+     * empty string, cancels any ongoing `getFileMessages` query, and sets the
+     * infinite data to the current data with the new message inserted at the
+     * top of the latest page. The component is set to a loading state.
+     *
+     * @param {{ message: string }} opts - The message to be added.
+     * @returns {Promise<{ previousMessages: Message[] }>} - A promise that resolves
+     * to an object with a single property `previousMessages` which is an array
+     * of all the messages that existed in the chat before the new message was
+     * added.
+     */
     onMutate: async ({ message }) => {
       backupMessage.current = message;
       setMessage("");
@@ -94,6 +130,14 @@ export const ChatContextProvider = ({ fileId, children }: Props) => {
       };
     },
 
+    /**
+     * Called when the mutation fails.
+     * Resets the chat input message to the last message sent before the mutation
+     * and sets the infinite data to the previous messages.
+     * @param _ - The error that caused the mutation to fail.
+     * @param __ - The variables passed to the mutation.
+     * @param context - The context of the mutation.
+     */
     onError: (_, __, context) => {
       setMessage(backupMessage.current);
       utils.getFileMessages.setData(
@@ -102,6 +146,13 @@ export const ChatContextProvider = ({ fileId, children }: Props) => {
       );
     },
 
+    /**
+     * Called when the mutation is successful.
+     * Sets the chat input message to an empty string and sets the infinite data
+     * to the previous messages with the new message inserted at the top of the
+     * latest page.
+     * @param stream - The response from the server.
+     */
     onSuccess: async (stream) => {
       setIsLoading(false);
       if (!stream) {
@@ -174,6 +225,10 @@ export const ChatContextProvider = ({ fileId, children }: Props) => {
       }
     },
 
+    /**
+     * Called when the mutation has finished, regardless of whether it was successful
+     * or not. Sets isLoading to false and invalidates the getFileMessages query.
+     */
     onSettled: async () => {
       setIsLoading(false);
       await utils.getFileMessages.invalidate({ fileId });
@@ -182,6 +237,11 @@ export const ChatContextProvider = ({ fileId, children }: Props) => {
 
   const addMessage = () => sendMessage({ message });
 
+  /**
+   * Handles a change event from the text area, and updates the message
+   * state with the new value.
+   * @param {ChangeEvent<HTMLTextAreaElement>} e - The change event.
+   */
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
   };

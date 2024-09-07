@@ -4,6 +4,11 @@ import { getUserSubscriptionPlan } from "@/lib/stripe";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
+/**
+ * Redirects to /auth-callback if the user is not logged in.
+ * Redirects to /auth-callback if the user is not in the database.
+ * Otherwise, renders the Dashboard component with the user's subscription plan.
+ */
 const Page = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();

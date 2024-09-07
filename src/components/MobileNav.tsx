@@ -8,6 +8,12 @@ interface MobileNavProps {
   isAuth: boolean;
 }
 
+/**
+ * A mobile navigation component that toggles open and closed on click.
+ * If `isAuth` is true, it shows a dashboard link and a sign out link.
+ * If `isAuth` is false, it shows a sign up link, a sign in link, and a pricing link.
+ * The links are closed on click if the current pathname matches the link's href.
+ */
 const MobileNav = ({ isAuth }: MobileNavProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const toggleOpen = () => setIsOpen((prev) => !prev);
@@ -17,6 +23,11 @@ const MobileNav = ({ isAuth }: MobileNavProps) => {
     if (isOpen) toggleOpen();
   }, [pathname]);
 
+  /**
+   * If the current pathname matches the given href, close the menu by
+   * calling toggleOpen(). Otherwise, do nothing.
+   * @param {string} href The href to compare with the current pathname.
+   */
   const closeOnCurrent = (href: string) => {
     if (pathname === href) toggleOpen();
   };

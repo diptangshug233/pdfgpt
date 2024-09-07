@@ -34,6 +34,15 @@ interface PdfRendererProps {
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
+/**
+ * PdfRenderer is a component to render a PDF. It provides zooming,
+ * rotating, and full-screen capabilities.
+ *
+ * @param {string} url - The URL of the PDF file to render.
+ *
+ * @example
+ * <PdfRenderer url="https://example.com/example.pdf" />
+ */
 const PdfRenderer = ({ url }: PdfRendererProps) => {
   const [numPages, setNumPages] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
@@ -64,6 +73,11 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
     resolver: zodResolver(CustomPageValidator),
   });
 
+  /**
+   * Handles the submission of the page input form.
+   * Updates the current page state and the form value.
+   * @param {{ page: string }} values - The form values.
+   */
   const handlePageSubmit = ({ page }: TCustomPageValidator) => {
     setCurrPage(Number(page));
     setValue("page", String(page));

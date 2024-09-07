@@ -11,6 +11,15 @@ interface PdfFullScreenProps {
   fileUrl: string;
 }
 
+/**
+ * A button that opens a fullscreen dialog with a PDF when clicked.
+ * The PDF is rendered with the react-pdf library, and the dialog
+ * is rendered with the radix-ui Dialog component.
+ *
+ * @param {string} fileUrl The url of the pdf file to be rendered.
+ * @returns {JSX.Element} A JSX element that renders a button that opens a
+ *                         fullscreen dialog with a PDF when clicked.
+ */
 const PdfFullScreen = ({ fileUrl }: PdfFullScreenProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [numPages, setNumPages] = useState<number>();
