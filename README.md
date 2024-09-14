@@ -85,6 +85,10 @@ The workflow for using [PDF-GPT](https://pdfgpt-ai.vercel.app/) is as follows:
 - Intuitive navigation and user experience
 - Dark mode support
 
+### PageSpeed Insights
+
+[Find PageSpeed Insights scores here.](https://pagespeed.web.dev/analysis/https-pdfgpt-ai-vercel-app/jn6yod109g?form_factor=desktop)
+
 ## Contributing
 
 Contributions to [PDF-GPT](https://pdfgpt-ai.vercel.app/) are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request on the project's GitHub repository.
